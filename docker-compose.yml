@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # 1. ส่วนของ Web Server (PHP + Apache)
+  web:
+    build: .
+    ports:
+      - "80:80"  # เข้าเว็บผ่าน http://localhost
+    volumes:
+      - ./:/var/www/html # เชื่อมโฟลเดอร์งานในเครื่อง เข้ากับ Docker
+    depends_on:
+      - db
+
+  # 2. ส่วนของ Database (MySQL)
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # รหัสผ่าน root
+      MYSQL_DATABASE: smart_delivery_db # ตั้งชื่อ Database ตรงนี้เลย (เปลี่ยนได้)
+    ports:
+      - "3306:3306"
+
+  # 3. ส่วนของ phpMyAdmin (เอาไว้จัดการ DB)
+  pma:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8080:80" # เข้า phpMyAdmin ผ่าน http://localhost:8080
+    depends_on:
+      - db
