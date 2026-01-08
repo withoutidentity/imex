@@ -686,10 +686,10 @@ include '../includes/header.php';
                                             </td>
                                             <td class="px-3 py-2 whitespace-nowrap">
                                                 <?php if ($delivery['latitude'] && $delivery['longitude']): ?>
-                                                    <button onclick="showLocationOnMap(<?php echo $delivery['latitude']; ?>, <?php echo $delivery['longitude']; ?>, '<?php echo addslashes($delivery['recipient_name']); ?>', '<?php echo htmlspecialchars($zoneId, ENT_QUOTES); ?>')" 
-                                                            class="text-blue-600 hover:text-blue-800 text-xs">
+                                                    <a href="https://www.google.com/maps?q=<?php echo $delivery['latitude']; ?>,<?php echo $delivery['longitude']; ?>" target="_blank" rel="noopener"
+                                                       class="text-blue-600 hover:text-blue-800 text-xs">
                                                         <i class="fas fa-map-marker-alt mr-1"></i>แผนที่
-                                                    </button>
+                                                        </a>
                                                     <div class="text-xs text-gray-500 mt-1">
                                                         <?php echo number_format($delivery['distance_from_center'], 2); ?> กม.
                                                     </div>
