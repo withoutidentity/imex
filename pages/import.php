@@ -708,7 +708,7 @@ function importToDatabase($data)
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold mb-2 flex items-center gap-3">
+                <h1 class="text-xl md:text-3xl font-bold mb-2 flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                         <i class="fas fa-file-import text-xl"></i>
                     </div>
@@ -831,17 +831,17 @@ function importToDatabase($data)
             </h2>
 
             <!-- Select delivery date first -->
-            <form method="POST" class="mb-4 flex items-end gap-3">
+            <form method="POST" class="mb-4">
                 <input type="hidden" name="action" value="set_date">
-                <div class="flex-1">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">เลือกวันที่จัดส่ง</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">เลือกวันที่จัดส่ง</label>
+                <div class="flex gap-3">
                     <input type="date" name="delivery_date"
                         value="<?php echo htmlspecialchars($_SESSION['import_delivery_date'] ?: ''); ?>" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <p class="text-xs text-gray-500 mt-1">ต้องเลือกวันที่ก่อนจึงจะอัพโหลดไฟล์ได้</p>
+                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <button type="submit"
+                        class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-900 whitespace-nowrap">บันทึกวันที่</button>
                 </div>
-                <button type="submit"
-                    class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-900">บันทึกวันที่</button>
+                <p class="text-xs text-gray-500 mt-1">ต้องเลือกวันที่ก่อนจึงจะอัพโหลดไฟล์ได้</p>
             </form>
 
             <form method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -854,8 +854,8 @@ function importToDatabase($data)
                     <p class="text-sm text-gray-500 mt-1">รองรับไฟล์: CSV, XLSX, XLS (แนะนำ CSV)</p>
                 </div>
 
-                <button type="submit" class="btn-red w-full">
-                    <i class="fas fa-cloud-upload-alt mr-2"></i>อัพโหลดและตรวจสอบข้อมูล
+                <button type="submit" class="bg-gray-800 text-white rounded-md hover:bg-gray-900 px-4 py-2 w-full">
+                    อัพโหลดและตรวจสอบข้อมูล
                 </button>
             </form>
         </div>

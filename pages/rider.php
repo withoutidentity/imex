@@ -96,11 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="fadeIn">
     <!-- Page Header -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">จัดการ Rider</h1>
                 <p class="text-gray-600">ระบบจัดการพนักงานขนส่งและมอบหมายงาน</p>
-                <div class="flex items-center gap-4 mt-2">
+                <div class="flex flex-wrap items-center gap-4 mt-2">
                     <div class="flex items-center gap-1 text-sm text-gray-600">
                         <i class="fas fa-users text-blue-600"></i>
                         <span>พนักงานทั้งหมด: <strong><?php echo count($employees); ?></strong> คน</span>
@@ -111,8 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="showAddEmployeeModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <div class="flex-shrink-0">
+                <button onclick="showAddEmployeeModal()" class="w-full md:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
                     <i class="fas fa-user-plus mr-2"></i>เพิ่มพนักงาน
                 </button>
             </div>
@@ -140,105 +140,160 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 รายชื่อพนักงาน
             </h2>
         </div>
-        
-        <div class="overflow-x-auto">
-            <table class="w-full table-auto">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อพนักงาน</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อเล่น</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ตำแหน่ง</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เบอร์โทร</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อีเมล</th>
-                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">สถานะ</th>
-                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่เริ่มงาน</th>
-                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">การดำเนินการ</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <?php if (empty($employees)): ?>
+
+        <?php if (empty($employees)): ?>
+            <div class="px-4 py-8 text-center text-gray-500">
+                <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
+                <div>ยังไม่มีข้อมูลพนักงาน</div>
+                <button onclick="showAddEmployeeModal()" class="mt-2 text-blue-600 hover:text-blue-800">
+                    คลิกเพื่อเพิ่มพนักงานคนแรก
+                </button>
+            </div>
+        <?php else: ?>
+            <!-- Desktop Table View -->
+            <div class="hidden lg:block overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead class="bg-gray-100">
                         <tr>
-                            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-                                <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
-                                <div>ยังไม่มีข้อมูลพนักงาน</div>
-                                <button onclick="showAddEmployeeModal()" class="mt-2 text-blue-600 hover:text-blue-800">
-                                    คลิกเพื่อเพิ่มพนักงานคนแรก
-                                </button>
-                            </td>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อพนักงาน</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อเล่น</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ตำแหน่ง</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เบอร์โทร</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อีเมล</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">สถานะ</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่เริ่มงาน</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">การดำเนินการ</th>
                         </tr>
-                    <?php else: ?>
-                        <?php foreach ($employees as $employee): ?>
-                            <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                <td class="px-4 py-4">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                            <i class="fas fa-user text-blue-600"></i>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                            <?php foreach ($employees as $employee): ?>
+                                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-user text-blue-600"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($employee['employee_name']); ?></div>
+                                                <div class="text-xs text-gray-500">ID: <?php echo $employee['id']; ?></div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($employee['employee_name']); ?></div>
-                                            <div class="text-xs text-gray-500">ID: <?php echo $employee['id']; ?></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($employee['nickname']); ?></td>
-                                <td class="px-4 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($employee['position']); ?></td>
-                                <td class="px-4 py-4 text-sm text-gray-900">
-                                    <?php if ($employee['phone']): ?>
-                                        <a href="tel:<?php echo $employee['phone']; ?>" class="text-blue-600 hover:text-blue-800">
-                                            <?php echo htmlspecialchars($employee['phone']); ?>
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="text-gray-400">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-900">
-                                    <?php if ($employee['email']): ?>
-                                        <a href="mailto:<?php echo $employee['email']; ?>" class="text-blue-600 hover:text-blue-800">
-                                            <?php echo htmlspecialchars($employee['email']); ?>
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="text-gray-400">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="px-4 py-4 text-center">
-                                    <?php if ($employee['status'] === 'active'): ?>
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
-                                            <i class="fas fa-check-circle mr-1"></i>ใช้งาน
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-800">
-                                            <i class="fas fa-times-circle mr-1"></i>ไม่ใช้งาน
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="px-4 py-4 text-center text-sm text-gray-900">
-                                    <?php if ($employee['hire_date']): ?>
-                                        <?php echo date('d/m/Y', strtotime($employee['hire_date'])); ?>
-                                    <?php else: ?>
-                                        <span class="text-gray-400">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="px-4 py-4">
-                                    <div class="flex flex-col space-y-1">
-                                        <button onclick="editEmployee(<?php echo htmlspecialchars(json_encode($employee)); ?>)" class="w-full bg-yellow-500 text-white px-2 py-1 rounded text-xs hover:bg-yellow-600 transition-colors">
-                                            <i class="fas fa-edit mr-1"></i>แก้ไข
-                                        </button>
-                                        <?php if ($employee['status'] === 'active'): ?>
-                                            <form method="POST" class="w-full" onsubmit="return confirm('ต้องการปิดการใช้งานพนักงานคนนี้หรือไม่?')">
-                                                <input type="hidden" name="employee_id" value="<?php echo $employee['id']; ?>">
-                                                <button type="submit" name="delete_employee" class="w-full bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 transition-colors">
-                                                    <i class="fas fa-user-times mr-1"></i>ปิดใช้งาน
-                                                </button>
-                                            </form>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($employee['nickname']); ?></td>
+                                    <td class="px-4 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($employee['position']); ?></td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">
+                                        <?php if ($employee['phone']): ?>
+                                            <a href="tel:<?php echo $employee['phone']; ?>" class="text-blue-600 hover:text-blue-800">
+                                                <?php echo htmlspecialchars($employee['phone']); ?>
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-gray-400">-</span>
                                         <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">
+                                        <?php if ($employee['email']): ?>
+                                            <a href="mailto:<?php echo $employee['email']; ?>" class="text-blue-600 hover:text-blue-800">
+                                                <?php echo htmlspecialchars($employee['email']); ?>
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-gray-400">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-4 py-4 text-center">
+                                        <?php if ($employee['status'] === 'active'): ?>
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle mr-1"></i>ใช้งาน
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-800">
+                                                <i class="fas fa-times-circle mr-1"></i>ไม่ใช้งาน
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-4 py-4 text-center text-sm text-gray-900">
+                                        <?php if ($employee['hire_date']): ?>
+                                            <?php echo date('d/m/Y', strtotime($employee['hire_date'])); ?>
+                                        <?php else: ?>
+                                            <span class="text-gray-400">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <div class="flex flex-col space-y-1">
+                                            <button onclick="editEmployee(<?php echo htmlspecialchars(json_encode($employee)); ?>)" class="w-full bg-yellow-500 text-white px-2 py-1 rounded text-xs hover:bg-yellow-600 transition-colors">
+                                                <i class="fas fa-edit mr-1"></i>แก้ไข
+                                            </button>
+                                            <?php if ($employee['status'] === 'active'): ?>
+                                                <form method="POST" class="w-full" onsubmit="return confirm('ต้องการปิดการใช้งานพนักงานคนนี้หรือไม่?')">
+                                                    <input type="hidden" name="employee_id" value="<?php echo $employee['id']; ?>">
+                                                    <button type="submit" name="delete_employee" class="w-full bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 transition-colors">
+                                                        <i class="fas fa-user-times mr-1"></i>ปิดใช้งาน
+                                                    </button>
+                                                </form>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="block lg:hidden p-4 space-y-4">
+                <?php foreach ($employees as $employee): ?>
+                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 <?php echo $employee['status'] === 'active' ? 'border-green-500' : 'border-red-500'; ?>">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <div class="font-bold text-lg text-gray-800"><?php echo htmlspecialchars($employee['employee_name']); ?></div>
+                                <div class="text-sm text-gray-600"><?php echo htmlspecialchars($employee['nickname']); ?> - <?php echo htmlspecialchars($employee['position']); ?></div>
+                            </div>
+                            <?php if ($employee['status'] === 'active'): ?>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                                    <i class="fas fa-check-circle mr-1"></i>ใช้งาน
+                                </span>
+                            <?php else: ?>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-800">
+                                    <i class="fas fa-times-circle mr-1"></i>ไม่ใช้งาน
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="border-t pt-3 space-y-2 text-sm">
+                            <?php if ($employee['phone']): ?>
+                                <div class="flex items-center text-gray-700">
+                                    <i class="fas fa-phone w-4 text-center text-gray-400 mr-2"></i>
+                                    <a href="tel:<?php echo $employee['phone']; ?>" class="text-blue-600 hover:text-blue-800"><?php echo htmlspecialchars($employee['phone']); ?></a>
+                                </div>
+                            <?php endif; ?>
+                            <?php if ($employee['email']): ?>
+                                <div class="flex items-center text-gray-700">
+                                    <i class="fas fa-envelope w-4 text-center text-gray-400 mr-2"></i>
+                                    <a href="mailto:<?php echo $employee['email']; ?>" class="text-blue-600 hover:text-blue-800 truncate"><?php echo htmlspecialchars($employee['email']); ?></a>
+                                </div>
+                            <?php endif; ?>
+                            <?php if ($employee['hire_date']): ?>
+                                <div class="flex items-center text-gray-700">
+                                    <i class="fas fa-calendar-alt w-4 text-center text-gray-400 mr-2"></i>
+                                    <span>เริ่มงาน: <?php echo date('d/m/Y', strtotime($employee['hire_date'])); ?></span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="mt-4 flex flex-col space-y-2">
+                            <button onclick="editEmployee(<?php echo htmlspecialchars(json_encode($employee)); ?>)" class="w-full bg-yellow-500 text-white px-2 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors flex items-center justify-center">
+                                <i class="fas fa-edit mr-2"></i>แก้ไข
+                            </button>
+                            <?php if ($employee['status'] === 'active'): ?>
+                                <form method="POST" class="w-full" onsubmit="return confirm('ต้องการปิดการใช้งานพนักงานคนนี้หรือไม่?')">
+                                    <input type="hidden" name="employee_id" value="<?php echo $employee['id']; ?>">
+                                    <button type="submit" name="delete_employee" class="w-full bg-red-500 text-white px-2 py-2 rounded-lg text-sm hover:bg-red-600 transition-colors flex items-center justify-center">
+                                        <i class="fas fa-user-times mr-2"></i>ปิดใช้งาน
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <!-- Add/Edit Employee Modal -->

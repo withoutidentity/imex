@@ -590,15 +590,16 @@ include '../includes/header.php';
 
                 <!-- Employees in Zone -->
                 <?php foreach ($zoneData['employees'] as $employeeName => $employeeData): ?>
+                    <?php $employeeId = md5($employeeName); // สร้าง ID สำหรับอ้างอิงใน Map Script ?>
                     <div class="p-6 border-b border-gray-100 last:border-b-0">
                         <!-- Employee Header -->
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4 md:gap-0">
+                            <div class="flex items-center w-full md:w-auto">
+                                <div class="bg-blue-100 p-2 rounded-lg mr-3 flex-shrink-0">
                                     <i class="fas fa-user text-blue-600"></i>
                                 </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-800">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-gray-800 truncate">
                                         <?php echo htmlspecialchars($employeeData['employee_info']['name']); ?>
                                         <?php if ($employeeData['employee_info']['nickname']): ?>
                                             <span class="text-sm text-gray-500">(<?php echo htmlspecialchars($employeeData['employee_info']['nickname']); ?>)</span>
@@ -611,23 +612,19 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <div class="flex items-center space-x-4">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full md:w-auto">
                                 <!-- Employee Stats -->
-                                <div class="text-right">
-                                    <div class="text-sm text-gray-600">สถิติ:</div>
-                                    <div class="flex space-x-2 text-xs">
-                                        <span class="bg-gray-100 px-2 py-1 rounded">ทั้งหมด: <?php echo $employeeData['stats']['total']; ?></span>
-                                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded">ส่งแล้ว: <?php echo $employeeData['stats']['delivered']; ?></span>
-                                        <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded">คงเหลือ: <?php echo ($employeeData['stats']['total'] - $employeeData['stats']['delivered']); ?></span>
+                                <div class="text-left sm:text-right w-full sm:w-auto">
+                                    <div class="text-sm text-gray-600 mb-1 sm:mb-0">สถิติ:</div>
+                                    <div class="flex flex-wrap gap-2 text-xs">
+                                        <span class="bg-gray-100 px-2 py-1 rounded whitespace-nowrap">ทั้งหมด: <?php echo $employeeData['stats']['total']; ?></span>
+                                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded whitespace-nowrap">ส่งแล้ว: <?php echo $employeeData['stats']['delivered']; ?></span>
+                                        <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded whitespace-nowrap">คงเหลือ: <?php echo ($employeeData['stats']['total'] - $employeeData['stats']['delivered']); ?></span>
                                     </div>
                                 </div>
-                                <!-- <button onclick="showEmployeeMap('?php echo addslashes($employeeName); ?>', ?php echo json_encode($employeeData['deliveries']); ?>)" 
-                                        class="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700 transition-colors"> 
-                                    <i class="fas fa-map-marked-alt mr-1"></i>แผนที่
-                                </button> -->
                                 <button 
-                                    onclick="showEmployeeMap('<?php echo addslashes($employeeName); ?>', '<?php echo $employeeId; ?>')" 
-                                    class="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700 transition-colors">
+                                    onclick="showEmployeeMapWithId('<?php echo addslashes($employeeName); ?>', '<?php echo $employeeId; ?>')" 
+                                    class="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700 transition-colors w-full sm:w-auto flex justify-center items-center">
                                     <i class="fas fa-map-marked-alt mr-1"></i>แผนที่
                                 </button>
 
@@ -638,10 +635,13 @@ include '../includes/header.php';
                                 }
                                 employeeDeliveries['<?php echo $employeeId; ?>'] = <?php echo json_encode($employeeData['deliveries']); ?>;
 
-                                function showEmployeeMap(employeeName, employeeId) {
-                                    const deliveryData = employeeDeliveries[employeeId];
-                                    // ใช้ข้อมูลต่อไป
-                                    console.log(employeeName, deliveryData);
+                                if (typeof showEmployeeMapWithId === 'undefined') {
+                                    window.showEmployeeMapWithId = function(employeeName, employeeId) {
+                                        const deliveryData = employeeDeliveries[employeeId];
+                                        if (typeof showEmployeeMap === 'function') {
+                                            showEmployeeMap(employeeName, deliveryData);
+                                        }
+                                    }
                                 }
                                 </script>
                             </div>
@@ -657,8 +657,8 @@ include '../includes/header.php';
                                         <th class="px-3 py-2 text-left">ผู้รับ</th>
                                         <th class="px-3 py-2 text-left">เบอร์โทร</th>
                                         <th class="px-3 py-2 text-left">ที่อยู่</th>
-                                        <th class="px-3 py-2 text-left">พิกัด</th>
-                                        <th class="px-3 py-2 text-left">สถานะ</th>
+                                        <th class="px-3 py-2 text-left whitespace-nowrap">พิกัด</th>
+                                        <th class="px-3 py-2 text-left whitespace-nowrap">สถานะ</th>
                                         <th class="px-3 py-2 text-left">การดำเนินการ</th>
                                     </tr>
                                 </thead>
@@ -684,7 +684,7 @@ include '../includes/header.php';
                                             <td class="px-3 py-2 max-w-xs truncate" title="<?php echo htmlspecialchars($delivery['address']); ?>">
                                                 <?php echo htmlspecialchars($delivery['address']); ?>
                                             </td>
-                                            <td class="px-3 py-2">
+                                            <td class="px-3 py-2 whitespace-nowrap">
                                                 <?php if ($delivery['latitude'] && $delivery['longitude']): ?>
                                                     <button onclick="showLocationOnMap(<?php echo $delivery['latitude']; ?>, <?php echo $delivery['longitude']; ?>, '<?php echo addslashes($delivery['recipient_name']); ?>', '<?php echo htmlspecialchars($zoneId, ENT_QUOTES); ?>')" 
                                                             class="text-blue-600 hover:text-blue-800 text-xs">
@@ -702,7 +702,7 @@ include '../includes/header.php';
                                                     <span class="text-gray-400 text-xs">ไม่มีพิกัด</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="px-3 py-2">
+                                            <td class="px-3 py-2 whitespace-nowrap">
                                                 <span class="status-badge status-<?php echo $delivery['delivery_status']; ?>">
                                                     <?php echo getStatusText($delivery['delivery_status']); ?>
                                                 </span>
@@ -897,17 +897,17 @@ include '../includes/header.php';
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md">
                         </div>
                     </div>
-                    <div class="flex gap-2 justify-end">
+                    <div class="flex flex-col md:flex-row gap-2 justify-end">
                         <button onclick="closeEditCoordinatesModal()" 
-                                class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
+                                class="w-full md:w-auto px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
                             ยกเลิก
                         </button>
                         <button onclick="openEditMapPicker()" 
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                             <i class="fas fa-map mr-1"></i>เลือกจากแผนที่
                         </button>
                         <button onclick="saveEditCoordinates()" 
-                                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                class="w-full md:w-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
                             <i class="fas fa-save mr-1"></i>บันทึก
                         </button>
                     </div>
