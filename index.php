@@ -34,7 +34,7 @@ try {
     <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg shadow-lg mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold mb-2">ยินดีต้อนรับสู่ระบบจัดการพัสดุ</h1>
+                <h1 class="text-xl md:text-2xl font-bold mb-2">ยินดีต้อนรับสู่ระบบจัดการพัสดุ</h1>
                 <p class="text-blue-100">Smart Delivery Zone Planner - จัดเส้นทางการจัดส่งอัตโนมัติ</p>
             </div>
             <div class="hidden lg:block">
@@ -191,16 +191,6 @@ try {
                         <span class="font-medium">ฐานข้อมูล</span>
                     </div>
                     <span class="text-sm text-green-600 font-medium">เชื่อมต่อแล้ว</span>
-                </div>
-                
-                <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-blue-100 p-2 rounded-full">
-                            <i class="fas fa-map text-blue-600"></i>
-                        </div>
-                        <span class="font-medium">Google Maps API</span>
-                    </div>
-                    <span class="text-sm text-blue-600 font-medium">พร้อมใช้งาน</span>
                 </div>
                 
                 <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">

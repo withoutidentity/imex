@@ -1,9 +1,11 @@
 <?php
+ob_start();
 $page_title = 'จัดการการจัดส่ง';
 require_once '../config/config.php';
 
 // Handle AJAX requests
 if (isset($_POST['action'])) {
+    ob_clean();
     header('Content-Type: application/json');
     
     try {
