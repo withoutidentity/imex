@@ -367,43 +367,13 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                         <span class="font-semibold text-white group-hover:text-red-100">นำเข้าข้อมูล</span>
                     </a>
 
-                    <a href="<?php echo $base_path; ?>pages/excel_processor.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'excel_processor.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'excel_processor.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-file-excel text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">ประมวลผล Excel</span>
-                    </a>
-
-                    <a href="<?php echo $base_path; ?>pages/geocoding.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'geocoding.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'geocoding.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-map-pin text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">แปลงพิกัด</span>
-                    </a>
-
+                
                     <!-- Zone Management -->
-                    <div class="pt-6 pb-3 px-1">
-                        <div class="flex items-center gap-2">
-                            <div class="w-6 h-0.5 bg-red-400/60 rounded-full"></div>
-                            <h3 class="text-xs font-bold text-red-200/90 uppercase tracking-wider">จัดการโซน</h3>
-                        </div>
-                    </div>
-
-                    <a href="<?php echo $base_path; ?>pages/zones.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'zones.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'zones.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-map-marked-alt text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">โซนการจัดส่ง</span>
-                    </a>
+                
 
 
 
-                    <a href="<?php echo $base_path; ?>pages/route_planner.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'route_planner.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'route_planner.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-route text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">วางแผนเส้นทาง</span>
-                    </a>
+                   
 
                     <!-- Delivery Management -->
                     <div class="pt-6 pb-3 px-1">
@@ -427,12 +397,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                         <span class="font-semibold text-white group-hover:text-red-100">จัดการ Rider</span>
                     </a>
 
-                    <a href="<?php echo $base_path; ?>pages/zone_employee_matching.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'zone_employee_matching.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'zone_employee_matching.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-users-cog text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">จับคู่โซน-พนักงาน</span>
-                    </a>
+                   
 
                     <!-- Reports -->
                     <div class="pt-6 pb-3 px-1">
@@ -442,12 +407,6 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                         </div>
                     </div>
 
-                    <a href="<?php echo $base_path; ?>pages/address_info.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'address_info.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'address_info.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-address-card text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">ข้อมูลที่อยู่</span>
-                    </a>
 
                     <a href="<?php echo $base_path; ?>pages/reports.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'reports.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
                         <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'reports.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
@@ -456,19 +415,6 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                         <span class="font-semibold text-white group-hover:text-red-100">รายงานสรุป</span>
                     </a>
 
-                    <a href="<?php echo $base_path; ?>pages/analytics.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'analytics.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'analytics.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-chart-line text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">วิเคราะห์ข้อมูล</span>
-                    </a>
-
-                    <a href="<?php echo $base_path; ?>pages/delivery_tracking_analysis.php" class="group flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:bg-white/15 hover:shadow-lg hover:scale-105 <?php echo $current_page === 'delivery_tracking_analysis.php' ? 'bg-white/20 shadow-lg' : ''; ?>">
-                        <div class="w-10 h-10 grid place-items-center rounded-xl bg-white/20 text-white group-hover:bg-white/30 transition-all duration-300 <?php echo $current_page === 'delivery_tracking_analysis.php' ? 'bg-white/30 shadow-lg' : ''; ?>">
-                            <i class="fas fa-search-location text-lg"></i>
-                        </div>
-                        <span class="font-semibold text-white group-hover:text-red-100">วิเคราะห์ Tracking</span>
-                    </a>
                 </div>
             </nav>
             

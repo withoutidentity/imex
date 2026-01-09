@@ -13,7 +13,7 @@ try {
     $stmt->execute();
     $total_zones = $stmt->fetch(PDO::FETCH_ASSOC)['total_zones'];
     
-    $stmt = $conn->prepare("SELECT COUNT(*) as total_riders FROM rider WHERE status = 'active'");
+    $stmt = $conn->prepare("SELECT COUNT(*) as total_riders FROM delivery_zone_employees WHERE status = 'active'");
     $stmt->execute();
     $total_riders = $stmt->fetch(PDO::FETCH_ASSOC)['total_riders'];
     
@@ -95,7 +95,7 @@ try {
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+    <!--<div class="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 class="text-xl font-bold mb-4">การทำงานด่วน</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <a href="pages/import.php" class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg quick-action-card">
@@ -138,7 +138,7 @@ try {
                 </div>
             </a>
         </div>
-    </div>
+    </div>-->
 
     <!-- Recent Activities -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">

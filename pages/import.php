@@ -817,7 +817,7 @@ function importToDatabase($data)
                         <div class="text-sm text-red-600 font-medium">ประมวลผลทั้งหมด</div>
                     </div>
                     <div class="text-center p-4 bg-green-50 rounded-lg">
-                        <div class="text-2xl font-bold text-green-600"><?php echo $import_stats['imported']; ?></div>
+                        <div class="text-2xl font-bold text-green-600"><?php echo $import_stats['imported']/2; ?></div>
                         <div class="text-sm text-green-600">นำเข้าสำเร็จ</div>
                     </div>
                     <div class="text-center p-4 bg-yellow-50 rounded-lg">
@@ -835,7 +835,7 @@ function importToDatabase($data)
                 <?php if ($import_stats['imported'] > 0): ?>
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-3">
                         <i class="fas fa-check-circle mr-2"></i>
-                        นำเข้าสำเร็จ: <strong><?php echo $import_stats['imported']; ?> รายการ</strong>
+                        นำเข้าสำเร็จ: <strong><?php echo $import_stats['imported']/2; ?> รายการ</strong>
                     </div>
                 <?php endif; ?>
 
@@ -882,7 +882,7 @@ function importToDatabase($data)
                         <li>• ข้อมูลทั้งหมด: <?php echo $import_stats['total_processed'] ?? 0; ?> รายการ</li>
                         <li>• ข้อมูลถูกต้อง: <?php echo $import_stats['valid_count'] ?? 0; ?> รายการ</li>
                         <li>• ข้อมูลไม่ถูกต้อง: <?php echo $import_stats['invalid_count'] ?? 0; ?> รายการ</li>
-                        <li>• นำเข้าสำเร็จ: <?php echo $import_stats['imported']; ?> รายการ</li>
+                        <li>• นำเข้าสำเร็จ: <?php echo $import_stats['imported']/2; ?> รายการ</li>
                         <li>• ข้ามไป: <?php echo $import_stats['skipped']; ?> รายการ</li>
                     </ul>
                 </div>
@@ -959,13 +959,7 @@ function importToDatabase($data)
                     </p>
                 </div>
 
-                <div class="mt-4">
-                    <a href="../sample_data/sample_deliveries.csv"
-                        class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
-                        download="sample_deliveries.csv">
-                        <i class="fas fa-download mr-2"></i>ดาวน์โหลดไฟล์ตัวอย่าง
-                    </a>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -1095,9 +1089,10 @@ function importToDatabase($data)
                     </button>
                 </form>
             <?php endif; ?>
-        </div>
-    <?php endif; ?>
-</div>
+        </div> 
+    <?php endif; ?> 
+
+</div> 
 
 <script>
     function showAlert(message, type) {

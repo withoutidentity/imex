@@ -1,7 +1,7 @@
 <?php
+ob_start();
 $page_title = 'จัดการ Rider';
 require_once '../config/config.php';
-include '../includes/header.php';
 
 // Fetch employees from delivery_zone_employees table
 $employees = [];
@@ -9,9 +9,11 @@ try {
     $stmt = $conn->prepare("
         SELECT 
             id,
+            employee_code,
             employee_name,
             nickname,
             position,
+            zone_code,
             phone,
             email,
             status,
@@ -27,20 +29,60 @@ try {
     $error_message = "เกิดข้อผิดพลาดในการโหลดข้อมูลพนักงาน: " . $e->getMessage();
 }
 
+// Fetch zones for dropdown
+$zones = [];
+try {
+    $stmt = $conn->prepare("SELECT zone_code, zone_name FROM zone_area WHERE is_active = 1 ORDER BY zone_code ASC");
+    $stmt->execute();
+    $zones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    // Handle error silently
+}
+
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_employee'])) {
         // Add new employee
         try {
+            // Generate employee_code automatically
+            $latestStmt = $conn->query("SELECT employee_code FROM delivery_zone_employees ORDER BY id DESC LIMIT 1");
+            $latestCode = $latestStmt->fetchColumn();
+            
+            if ($latestCode) {
+                // Extract numeric part and increment (e.g., 664921T000028 -> 664921T000029)
+                if (preg_match('/^(.+?)(\d+)$/', $latestCode, $matches)) {
+                    $prefix = $matches[1];
+                    $number = $matches[2];
+                    $newNumber = str_pad((int)$number + 1, strlen($number), '0', STR_PAD_LEFT);
+                    $newEmployeeCode = $prefix . $newNumber;
+                } else {
+                    $newEmployeeCode = $latestCode . '1'; // Fallback
+                }
+            } else {
+                $newEmployeeCode = '664921T000001'; // Default start
+            }
+
+            // Fetch description from zone_area based on zone_code
+            $zoneArea = null;
+            if (!empty($_POST['zone_code'])) {
+                $zStmt = $conn->prepare("SELECT description FROM zone_area WHERE zone_code = ?");
+                $zStmt->execute([$_POST['zone_code']]);
+                $zoneArea = $zStmt->fetchColumn();
+                if ($zoneArea === false) $zoneArea = null;
+            }
+
             $stmt = $conn->prepare("
                 INSERT INTO delivery_zone_employees 
-                (employee_name, nickname, position, phone, email, status, hire_date) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                (employee_code, employee_name, nickname, position, zone_code, zone_area, phone, email, status, hire_date) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
+                $newEmployeeCode,
                 $_POST['employee_name'],
                 $_POST['nickname'],
                 $_POST['position'],
+                $_POST['zone_code'],
+                $zoneArea,
                 $_POST['phone'],
                 $_POST['email'],
                 $_POST['status'],
@@ -58,13 +100,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $stmt = $conn->prepare("
                 UPDATE delivery_zone_employees 
-                SET employee_name = ?, nickname = ?, position = ?, phone = ?, email = ?, status = ?
+                SET employee_name = ?, nickname = ?, position = ?, zone_code = ?, phone = ?, email = ?, status = ?
                 WHERE id = ?
             ");
             $stmt->execute([
                 $_POST['employee_name'],
                 $_POST['nickname'],
                 $_POST['position'],
+                $_POST['zone_code'],
                 $_POST['phone'],
                 $_POST['email'],
                 $_POST['status'],
@@ -91,6 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+include '../includes/header.php';
 ?>
 
 <div class="fadeIn">
@@ -158,6 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อพนักงาน</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อเล่น</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ตำแหน่ง</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">โซน</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เบอร์โทร</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อีเมล</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">สถานะ</th>
@@ -175,12 +220,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </div>
                                             <div>
                                                 <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($employee['employee_name']); ?></div>
-                                                <div class="text-xs text-gray-500">ID: <?php echo $employee['id']; ?></div>
+                                                <div class="text-xs text-gray-500">Code: <?php echo htmlspecialchars($employee['employee_code'] ?? $employee['id']); ?></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-4 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($employee['nickname']); ?></td>
                                     <td class="px-4 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($employee['position']); ?></td>
+                                    <td class="px-4 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($employee['zone_code'] ?? '-'); ?></td>
                                     <td class="px-4 py-4 text-sm text-gray-900">
                                         <?php if ($employee['phone']): ?>
                                             <a href="tel:<?php echo $employee['phone']; ?>" class="text-blue-600 hover:text-blue-800">
@@ -245,7 +291,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="flex justify-between items-start mb-3">
                             <div>
                                 <div class="font-bold text-lg text-gray-800"><?php echo htmlspecialchars($employee['employee_name']); ?></div>
-                                <div class="text-sm text-gray-600"><?php echo htmlspecialchars($employee['nickname']); ?> - <?php echo htmlspecialchars($employee['position']); ?></div>
+                                <div class="text-sm text-gray-600">
+                                    <?php echo htmlspecialchars($employee['nickname']); ?> - <?php echo htmlspecialchars($employee['position']); ?>
+                                    <?php if (!empty($employee['zone_code'])): ?>
+                                        <span class="ml-1 bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs"><?php echo htmlspecialchars($employee['zone_code']); ?></span>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                             <?php if ($employee['status'] === 'active'): ?>
                                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
@@ -299,7 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Add/Edit Employee Modal -->
     <div id="employeeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 id="modalTitle" class="text-lg font-bold text-gray-800">เพิ่มพนักงานใหม่</h3>
                 </div>
@@ -322,11 +373,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label class="block text-sm font-medium text-gray-700 mb-2">ตำแหน่ง</label>
                             <select id="position" name="position" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">เลือกตำแหน่ง</option>
-                                <option value="Rider">Rider</option>
-                                <option value="Driver">Driver</option>
-                                <option value="Delivery Staff">Delivery Staff</option>
-                                <option value="Team Leader">Team Leader</option>
+                                <option value="SPT">SPT</option>
+                                <option value="SPT+C">SPT+C</option>
+                                <option value="SPT+S">SPT+S</option>
+                                <option value="Manager">Manager</option>
                                 <option value="Supervisor">Supervisor</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">โซน (Zone Code)</label>
+                            <select id="zoneCode" name="zone_code" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- เลือกโซน --</option>
+                                <?php foreach ($zones as $zone): ?>
+                                    <option value="<?php echo htmlspecialchars($zone['zone_code']); ?>">
+                                        <?php echo htmlspecialchars($zone['zone_code'] . ' - ' . $zone['zone_name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         
@@ -384,6 +447,7 @@ function editEmployee(employee) {
     document.getElementById('employeeName').value = employee.employee_name;
     document.getElementById('nickname').value = employee.nickname || '';
     document.getElementById('position').value = employee.position || '';
+    document.getElementById('zoneCode').value = employee.zone_code || '';
     document.getElementById('phone').value = employee.phone || '';
     document.getElementById('email').value = employee.email || '';
     document.getElementById('status').value = employee.status;

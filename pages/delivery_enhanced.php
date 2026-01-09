@@ -283,7 +283,7 @@ include '../includes/header.php';
                 <select id="employee-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                     <option value="">ทั้งหมด</option>
                     <?php foreach ($employees as $emp): ?>
-                        <option value="<?php echo $emp['id']; ?>" <?php echo ($selectedEmployee == $emp['id']) ? 'selected' : ''; ?>>
+                        <option value="<?php echo $emp['id']; ?>" <?php echo ((string)$selectedEmployee === (string)$emp['id']) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($emp['employee_name'] . ' (' . $emp['nickname'] . ')'); ?>
                         </option>
                     <?php endforeach; ?>

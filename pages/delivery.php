@@ -360,14 +360,14 @@ try {
 $deliveriesByZone = [];
 foreach ($deliveries as $delivery) {
     $zoneId = $delivery['zone_id'] ?? 'unassigned';
-    $employeeName = $delivery['employee_name'] ?? 'ไม่มีพนักงาน';
+    $employeeName = $delivery['employee_name'] ?? $empName ?? 'ไม่มีพนักงาน';
     
     if (!isset($deliveriesByZone[$zoneId])) {
         $deliveriesByZone[$zoneId] = [
             'zone_info' => [
                 'id' => $zoneId,
-                'name' => $delivery['zone_name'] ?? 'ไม่ระบุโซน',
-                'code' => $delivery['zone_code'] ?? 'N/A',
+                'name' => $delivery['zone_name'] ?? 'ตำเเหน่งโกดัง',
+                'code' => $delivery['zone_code'] ?? '',
                 'color' => $delivery['color_code'] ?? '#6b7280'
             ],
             'employees' => []
@@ -451,7 +451,7 @@ include '../includes/header.php';
                 </select>
             </div>
             <div class="flex items-end">
-                <button onclick="applyFilters()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                <button onclick="applyFilters()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors mb-1">
                     <i class="fas fa-search mr-2"></i>กรอง
                 </button>
             </div>
@@ -508,7 +508,7 @@ include '../includes/header.php';
                             <div class="w-4 h-4 rounded-full mr-3" style="background-color: <?php echo $zoneData['zone_info']['color']; ?>"></div>
                             <h2 class="text-xl font-bold text-gray-800">
                                 <?php echo htmlspecialchars($zoneData['zone_info']['name']); ?>
-                                <span class="text-sm text-gray-500">(<?php echo $zoneData['zone_info']['code']; ?>)</span>
+                                
                             </h2>
                         </div>
                         <div class="text-sm text-gray-600">
@@ -575,10 +575,10 @@ include '../includes/header.php';
                             </div>
                             
                             <!-- Actions -->
-                            <div class="flex items-end gap-2">
+                            <div class="flex items-end gap-2 mb-1.5">
                                 <button onclick="openMapPicker('<?php echo htmlspecialchars($zoneId, ENT_QUOTES); ?>')" 
                                         class="flex-1 bg-blue-600 text-white px-3 py-2 text-sm rounded-md hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-map mr-1"></i>เลือกจากแผนที่
+                                    <i class="fas fa-map mr-1"></i>แผนที่
                                 </button>
                                 <button onclick="saveLocation('<?php echo htmlspecialchars($zoneId, ENT_QUOTES); ?>')" 
                                         class="flex-1 bg-green-600 text-white px-3 py-2 text-sm rounded-md hover:bg-green-700 transition-colors">
@@ -798,7 +798,7 @@ include '../includes/header.php';
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 ">
                         <button onclick="closeMapPickerModal()" 
                                 class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
                             ยกเลิก
@@ -847,7 +847,7 @@ include '../includes/header.php';
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md">
                             </div>
                         </div>
-                        <div class="mt-2">
+                        <div class="mt-2" style="display: none;">
                             <label class="block text-sm font-medium text-gray-700 mb-1">ที่อยู่ที่พบ</label>
                             <input type="text" id="geocode-formatted-address" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md">
@@ -859,15 +859,15 @@ include '../includes/header.php';
                             </a>
                         </div>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 mt-5">
                         <button onclick="closeGeocodeModal()" 
                                 class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
                             ยกเลิก
                         </button>
-                        <button onclick="searchGeocode()" 
+                        <!-- <button onclick="searchGeocode()" 
                                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                             <i class="fas fa-search mr-1"></i>ค้นหา
-                        </button>
+                        </button> -->
                         <button onclick="saveGeocode()" 
                                 class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
                             <i class="fas fa-save mr-1"></i>บันทึก
