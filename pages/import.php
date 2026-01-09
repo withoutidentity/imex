@@ -694,7 +694,8 @@ function importToDatabase($data)
                                 'district' => $row['district'],
                                 'subdistrict' => $row['sub_district'],
                                 'postal_code' => $row['postal_code'],
-                                'delivery_status' => 'pending'
+                                'delivery_status' => 'pending',
+                                'ชื่อของพนักงานนำจ่าย' => $row['delivery_staff_name']
                             ];
 
                             foreach ($field_mappings as $column => $value) {

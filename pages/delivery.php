@@ -30,8 +30,12 @@ if (isset($_POST['action'])) {
                 $params = [$date];
                 
                 if ($employeeId) {
-                    $whereClause .= " AND zea.employee_id = ? AND zea.is_active = TRUE";
-                    $params[] = $employeeId;
+                    $empStmt = $conn->prepare("SELECT employee_name FROM delivery_zone_employees WHERE id = ?");
+                    $empStmt->execute([$employeeId]);
+                    $empName = $empStmt->fetchColumn();
+                    
+                    $whereClause .= " AND da.`ชื่อของพนักงานนำจ่าย` = ?";
+                    $params[] = $empName ?: '';
                 }
                 
                 if ($zoneId) {
@@ -300,8 +304,15 @@ try {
     $params = [$selectedDate];
     
     if ($selectedEmployee) {
-        $whereClause .= " AND zea.employee_id = ? AND zea.is_active = TRUE";
-        $params[] = $selectedEmployee;
+        $empName = '';
+        foreach ($employees as $emp) {
+            if ($emp['id'] == $selectedEmployee) {
+                $empName = $emp['employee_name'];
+                break;
+            }
+        }
+        $whereClause .= " AND da.`ชื่อของพนักงานนำจ่าย` = ?";
+        $params[] = $empName;
     }
     
     if ($selectedZone) {
