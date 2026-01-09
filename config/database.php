@@ -23,4 +23,3 @@ class Database {
 // Global database connection
 $database = new Database();
 $conn = $database->connect();
-?> 

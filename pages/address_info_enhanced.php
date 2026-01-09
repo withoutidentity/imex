@@ -490,7 +490,7 @@ include '../includes/header.php';
 <!-- Map Modal -->
 <div id="map-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-6 border-b">
                 <h3 id="map-title" class="text-lg font-semibold text-gray-800">ตำแหน่งที่อยู่</h3>
                 <button onclick="closeMapModal()" class="text-gray-400 hover:text-gray-600">

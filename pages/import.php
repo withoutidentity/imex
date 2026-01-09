@@ -470,6 +470,72 @@ function validateAndCleanData($data)
     return $cleaned;
 }
 
+function formatDateTime($value)
+{
+    if (empty($value)) {
+        return null;
+    }
+
+    // Handle Excel Serial Date (numeric)
+    if (is_numeric($value) && $value > 25569) {
+        $unix_date = ($value - 25569) * 86400;
+        return gmdate("Y-m-d H:i:s", (int)$unix_date);
+    }
+
+    $value = trim($value);
+    // Normalize spaces (convert multiple spaces to single space)
+    $value = preg_replace('/\s+/', ' ', $value);
+
+    // Try explicit formats (Thai d/m/Y preference)
+    $formats = [
+        'd/m/Y g:i:s A', // 07/05/2025 09:06:42 AM
+        'j/n/Y g:i:s A', // 7/5/2025 9:06:42 AM
+        'd/m/Y H:i:s',   // 07/05/2025 13:00:00
+        'j/n/Y H:i:s',   // 7/5/2025 13:00:00
+        'd/m/Y H:i',
+        'j/n/Y H:i',
+        'd/m/Y',
+        'j/n/Y'
+    ];
+
+    foreach ($formats as $format) {
+        $dt = DateTime::createFromFormat($format, $value);
+        if ($dt !== false) {
+            $errors = DateTime::getLastErrors();
+            if ($errors['error_count'] === 0 && $errors['warning_count'] === 0) {
+                return $dt->format('Y-m-d H:i:s');
+            }
+        }
+    }
+
+    // Fallback: Regex for d/m/Y (handling various separators and loose time)
+    if (preg_match('/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})\s*(.*)$/', $value, $matches)) {
+        $day = $matches[1];
+        $month = $matches[2];
+        $year = $matches[3];
+        $time = trim($matches[4]);
+
+        // Handle 2 digit year (assume 20xx)
+        if (strlen($year) == 2) {
+            $year = '20' . $year;
+        }
+
+        $dt_string = "$year-$month-$day" . ($time ? " $time" : "");
+        $timestamp = strtotime($dt_string);
+        if ($timestamp) {
+            return date('Y-m-d H:i:s', $timestamp);
+        }
+    }
+
+    // Final fallback
+    $timestamp = strtotime($value);
+    if ($timestamp !== false && $timestamp > 0) {
+        return date('Y-m-d H:i:s', $timestamp);
+    }
+
+    return null;
+}
+
 function importToDatabase($data)
 {
     global $conn;
@@ -543,24 +609,24 @@ function importToDatabase($data)
                                 'COD' => floatval($row['cod_amount'] ?? 0),
                                 'ชื่อแฟรนไชส์' => $row['franchise_name'],
                                 'รหัสแฟรนไชส์' => $row['franchise_code'],
-                                'เวลาเกทเวย์นำส่ง' => $row['gateway_time'],
-                                'เวลาที่เร็วที่สุด' => $row['earliest_time'],
-                                'เวลาที่พัสดุถึงสาขา' => $row['arrival_at_branch'],
+                                'เวลาเกทเวย์นำส่ง' => formatDateTime($row['gateway_time']),
+                                'เวลาที่เร็วที่สุด' => formatDateTime($row['earliest_time']),
+                                'เวลาที่พัสดุถึงสาขา' => formatDateTime($row['arrival_at_branch']),
                                 'รหัสสาขานำจ่าย' => $row['delivery_branch_code'],
-                                'เวลาที่นำจ่ายพัสดุ' => $row['delivery_time'],
+                                'เวลาที่นำจ่ายพัสดุ' => formatDateTime($row['delivery_time']),
                                 'รหัสพนักงานนำจ่าย' => $row['delivery_staff_code'],
                                 'ชื่อของพนักงานนำจ่าย' => $row['delivery_staff_name'],
                                 '派件员岗位' => $row['delivery_staff_position'],
                                 '派件员手机' => $row['delivery_staff_phone'],
                                 'ช่วยนำจ่ายหรือไม่' => $row['helper_required'],
-                                'เวลาพัสดุมีปัญหา' => $row['problem_time'],
+                                'เวลาพัสดุมีปัญหา' => formatDateTime($row['problem_time']),
                                 'สาเหตุของพัสดุมีปัญหา' => $row['problem_reason'],
-                                'เวลาที่เซ็นรับพัสดุ' => $row['sign_received_time'],
+                                'เวลาที่เซ็นรับพัสดุ' => formatDateTime($row['sign_received_time']),
                                 'สาขาเซ็นรับ' => $row['sign_received_branch'],
-                                'เวลาการบันทึกเซ็นรับพัสดุ' => $row['sign_record_time'],
+                                'เวลาการบันทึกเซ็นรับพัสดุ' => formatDateTime($row['sign_record_time']),
                                 '(พนักงานนำจ่ายพัสดุ)เซ็นรับพัสดุ' => $row['sign_received_by_staff'],
                                 'ผู้เซ็นรับ' => $row['sign_received_by'],
-                                'เวลาลงทะเบียนพัสดุตีกลับ' => $row['return_register_time'],
+                                'เวลาลงทะเบียนพัสดุตีกลับ' => formatDateTime($row['return_register_time']),
                                 'สาขาลงทะเบียนตีกลับ' => $row['return_register_branch'],
                                 'ประเภทสาขา' => $row['branch_type'],
                                 'แหล่งที่มาของออเดอร์' => $row['order_source'],

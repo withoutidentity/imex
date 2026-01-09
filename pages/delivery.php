@@ -748,7 +748,7 @@ include '../includes/header.php';
 <!-- Map Modal -->
 <div id="map-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-6 border-b">
                 <h3 id="map-title" class="text-lg font-semibold text-gray-800">แผนที่การจัดส่ง</h3>
                 <button onclick="closeMapModal()" class="text-gray-400 hover:text-gray-600">
@@ -763,7 +763,7 @@ include '../includes/header.php';
 <!-- Map Picker Modal for Location Selection -->
 <div id="map-picker-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-6 border-b">
                 <h3 class="text-lg font-semibold text-gray-800">เลือกตำแหน่งจากแผนที่</h3>
                 <button onclick="closeMapPickerModal()" class="text-gray-400 hover:text-gray-600">
@@ -806,7 +806,7 @@ include '../includes/header.php';
 <!-- Geocode Address Modal -->
 <div id="geocode-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-x-auto">
             <div class="flex items-center justify-between p-6 border-b">
                 <h3 class="text-lg font-semibold text-gray-800">ค้นหาที่อยู่ใน Google Maps</h3>
                 <button onclick="closeGeocodeModal()" class="text-gray-400 hover:text-gray-600">
@@ -871,7 +871,7 @@ include '../includes/header.php';
 <!-- Edit Coordinates Modal -->
 <div id="edit-coordinates-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-6 border-b">
                 <h3 class="text-lg font-semibold text-gray-800">แก้ไขพิกัด</h3>
                 <button onclick="closeEditCoordinatesModal()" class="text-gray-400 hover:text-gray-600">
